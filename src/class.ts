@@ -96,4 +96,20 @@ export class Keystore implements IKeystore {
   stringify(): string {
     return JSON.stringify(this.toObject(), null, 2);
   }
+
+  /**
+   * Trigger a browser file download of the keystore as a JSON file
+   *
+   * @param filename optional filename for the download (defaults to `keystore-<uuid>.json`)
+   */
+  download(filename?: string): void {
+    const name = filename ?? `keystore-${this.uuid}.json`;
+    const blob = new Blob([this.stringify()], {type: "application/json"});
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = name;
+    anchor.click();
+    URL.revokeObjectURL(url);
+  }
 }
